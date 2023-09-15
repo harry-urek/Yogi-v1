@@ -20,5 +20,5 @@ def get_db():
         yield db
     finally:
         db.close()
-# changes to sqlalchemy to ormar
+
 

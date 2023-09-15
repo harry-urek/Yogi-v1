@@ -1,12 +1,13 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Response, status
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing import List
 
-from .models import Plants , Details
+from .models import Plants , Details, User
 from sqlalchemy.orm import Session
 from .db import  get_db
 from fastapi_sqlalchemy import DBSessionMiddleware
+from datetime import datetime
 import os
 load_dotenv(".env")
 app = FastAPI()
@@ -33,7 +34,18 @@ class Plant(BaseModel):
     
     class config:
         orm_mode =True
+        
+class UserOut(BaseModel):
+    id: int
+    email: str
+    
 
+    class Config:
+        orm_mode = True
+
+class UserCreate(BaseModel):
+    email: str
+    
 
 
 @app.get("/plants/{plant_id}")
@@ -58,9 +70,9 @@ async def read_detail(plant_id:int, db: Session = Depends(get_db)):
     else:
         raise HTTPException(status_code=404, detail='Questions is not found')
 
-@app.post("/plants")
+@app.post("/plants", status_code=status.HTTP_201_CREATED, responses=Plant)
 async def create_plant(plant_text:Plant, db: Session = Depends(get_db)):
-    db_plant = Plants(**plant_text.dict())
+    db_plant = Plants(plant_text)
     db.add(db_plant)
     db.commit()
     db.refresh(db_plant)
@@ -77,3 +89,13 @@ async def create_plant_details(plant: PlantBase, db: Session = Depends(get_db)):
         db_choice = Details(plant_family=choice.plant_family, plant_bio=choice.plant_bio, plant_descr=choice.plant_descr, plant_url= choice.plant_url, plant_id=db_plant.id)
         db.add(db_choice)
     db.commit()
+    
+@app.post("/", status_code=status.HTTP_201_CREATED, response_model=UserOut)
+def create_user(user: UserCreate, db: Session = Depends(get_db)):
+
+    new_user = User(**user.dict())
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return new_user
