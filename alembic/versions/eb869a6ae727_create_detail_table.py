@@ -20,13 +20,11 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     op.create_table('details', sa.Column('id', sa.Integer(), primary_key=True, index=True),
-                    op.Column('plant_family', sa.String),
-                    op.Column('plant_bio', sa.String),
-                    op.Column('plant_descr', sa.String),
-                    op.Column('plant_url', sa.String),
-                    op.Column('plant_id', sa.String),
-                    op.create_foreign_key('plant_detail_fk', source_table="details", referent_table="plants", local_cols=[
-                        'plant_id'], remote_cols=['id']))
+                    sa.Column('plant_family', sa.String()),
+                    sa.Column('plant_bio', sa.String()),
+                    sa.Column('plant_descr', sa.String()),
+                    sa.Column('plant_url', sa.String())
+    )
 
 
 def downgrade() -> None:
