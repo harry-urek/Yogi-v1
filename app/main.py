@@ -42,6 +42,8 @@ async def read_plant(plant_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail='Plants is not found')
 
 
+
+
 @app.get("/details/(plant_id)")
 async def read_detail(plant_id: int, db: Session = Depends(get_db)):
     if (
@@ -51,16 +53,21 @@ async def read_detail(plant_id: int, db: Session = Depends(get_db)):
     ):
         return result
     else:
-        raise HTTPException(status_code=404, detail='Plants is not found')
+
+        raise HTTPException(status_code=404, detail='Details not found')
+
+
 
 
 @app.post("/plants")
 async def create_plant(plant_text: PlantBase, db: Session = Depends(get_db)):
     db_plant = Plants(**plant_text.dict())
+
     db.add(db_plant)
     db.commit()
     db.refresh(db_plant)
     return {"plant_text": plant_text}
+
 
 
 @app.post("/plants_details")
