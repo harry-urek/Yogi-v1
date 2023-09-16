@@ -1,6 +1,5 @@
 server
-docker-compose
-Dockerfile
 .gitignore
 .git
 .vscode
+*__pychache__
