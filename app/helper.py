@@ -12,7 +12,7 @@ IMG_PATH =''
 W_PATH = '/usr/src/app/app/weights/ayurmodelstate.pth'
 EMBEDDING_SIZE = 1280
 NUM_CLASSES = 6
-CLASS_LABEL =['Neem', 'Rama tulsi', 'Ashwagandha', 'Turmeric', 'Cardamom', 'Cumin']
+CLASS_LABEL =['Ashwagandha', 'Cardamom', 'Cumin','Neem', 'Turmeric', 'Rama tulsi']
 
 
 
